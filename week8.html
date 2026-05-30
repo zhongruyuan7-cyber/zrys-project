@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第8周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #111827 50%, #022c22 100%);
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-gold: #fbbf24;     /* 沉金工艺金 */
+            --accent-cyan: #06b6d4;      /* 芯片硅蓝 */
+            --accent-green: #10b981;    /* 电路板绿 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部粘性玻璃导航条 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 主体内容容器 */
+        .article-container {
+            max-width: 1050px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 巨幕标题头 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-gold), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-secondary); font-size: 1.1rem; font-weight: 300; }
+
+        /* 核心卡片板块 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; margin-bottom: 15px; }
+
+        /* 工业级规则指标面板 */
+        .spec-panel {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 22px;
+            margin: 15px 0;
+        }
+        .spec-panel ul { list-style: none; }
+        .spec-panel li { margin-bottom: 10px; color: #e2e8f0; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+        .spec-panel li:last-child { margin-bottom: 0; }
+        .spec-badge { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-family: monospace; }
+        
+        .panel-gold { border-color: rgba(251, 191, 36, 0.2); background: rgba(251, 191, 36, 0.02); }
+        .panel-gold .spec-badge { background: rgba(251, 191, 36, 0.15); color: var(--accent-gold); }
+        .panel-cyan { border-color: rgba(6, 182, 212, 0.2); background: rgba(6, 182, 212, 0.02); }
+        .panel-cyan .spec-badge { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
+
+        /* 成果图高级数字画廊网格 */
+        .work-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .gallery-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.05);
+        }
+        .card-gold:hover { border-color: rgba(251, 191, 36, 0.3); box-shadow: 0 15px 35px rgba(251, 191, 36, 0.1); }
+        .card-cyan:hover { border-color: rgba(6, 182, 212, 0.3); box-shadow: 0 15px 35px rgba(6, 182, 212, 0.1); }
+
+        .image-viewport {
+            width: 100%;
+            height: 220px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: #090d16;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-card img {
+            width: 95%;
+            height: 95%;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.4s;
+        }
+
+        .gallery-card:hover img { transform: scale(1.03); }
+        .gallery-card p { color: var(--text-primary); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; }
+
+        /* 横向导航切换条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: var(--accent-green);
+            color: #0f172a;
+            border-color: var(--accent-green);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 8 周学习日志</h1>
+            <p>硬核硬件进化周：从 AI 辅助校庆电子徽章到 TP4056 充电管理板的全要素 PCB 设计</p>
+        </header>
+
+        <section class="card-section">
+            <h2>🎨 课题一：校庆主题 AI 辅助 LED 电子徽章设计</h2>
+            <p>本课题要求紧扣母校“竢实扬华”的精神积淀，借助 AI 的辅助生成算法设计一款高度定制化的电子纪念徽章，在狭小的板卡空间内达成机械尺寸与电气特性的双重平衡：</p>
+            
+            <div class="spec-panel panel-gold">
+                <ul>
+                    <li><span class="spec-badge">DRC-A01</span> 🎆 <strong>创意轮廓</strong>：外形框必须无缝融合 <strong>西南交通大学校庆图腾标志元素</strong>。</li>
+                    <li><span class="spec-badge">DRC-A02</span> 🧩 <strong>极简组件</strong>：整板限制采用精简的 <strong>4 个或 5 个电子元器件</strong> 闭环驱动。</li>
+                    <li><span class="spec-badge">DRC-A03</span> 📐 <strong>工程标准</strong>：机械层/丝印层必须精准进行 <strong>全维物理长宽尺寸标注</strong>。</li>
+                    <li><span class="spec-badge">DRC-A04</span> 🔀 <strong>线轨约束</strong>：走线宽度强制锁定为 <strong>1mm 粗线</strong>，全量信号拐弯处必须严控为 <strong>45° 钝角</strong>。</li>
+                </ul>
+            </div>
+
+            <div class="work-gallery-grid">
+                <div class="gallery-card card-gold">
+                    <div class="image-viewport">
+                        <img src="D:/MyProject/html/images/3e02afe9756ccac39d313834ca3f9f34.png" alt="徽章2D布线标注图">
+                    </div>
+                    <p>机械层 2D 线轨拓扑与物理尺寸标注图</p>
+                </div>
+                <div class="gallery-card card-gold">
+                    <div class="image-viewport">
+                        <img src="D:/MyProject/html/images/eba4f795451ad0910775cf233b57549d.png" alt="徽章3D空间效果图">
+                    </div>
+                    <p>实体 3D 沉金工艺外观空间预览图</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>⚡ 课题二：TP4056 工业级锂电池充电管理卡板开发</h2>
+            <p>本课题转入高载流、大功率的电源管理系统开发。围绕恒流/恒压充电芯片 TP4056（立创商城编号：C16581），严格依照高频热流均衡标准打磨电路板：</p>
+            
+            <div class="spec-panel panel-cyan">
+                <ul>
+                    <li><span class="spec-badge">DRC-B01</span> 🧠 <strong>高热封装</strong>：选用底部自带独立散热金属片的 <strong>ESOP-8 芯片封装</strong> 规格，阻断过热降流。</li>
+                    <li><span class="spec-badge">DRC-B02</span> 🔌 <strong>接口规范</strong>：电源输入接口选型标准的 <strong>MINI_USB-B</strong>，电池正极输出端挂载 <strong>`bat` 网络标签</strong>。</li>
+                    <li><span class="spec-badge">DRC-B03</span> 🌊 <strong>宽体载流</strong>：信号流脉络清晰，<strong>VCC 强电核心电源轨线采用宽体实线填充</strong>。</li>
+                    <li><span class="spec-badge">DRC-B04</span> 🗺️ <strong>大面积铺铜</strong>：边框层切出圆角矩形，全板布线完工后执行 <strong>GND 网络大面积红铜铺设（Copper Pour）</strong>。</li>
+                </ul>
+            </div>
+
+            <div class="work-gallery-grid">
+                <div class="gallery-card card-cyan">
+                    <div class="image-viewport">
+                        <img src="D:/MyProject/html/images/aafdcaa98536b612fc4a4f72e02f5010.png" alt="TP4056原理图复刻">
+                    </div>
+                    <p>TP4056 核心管理电路精密原理图纸</p>
+                </div>
+                <div class="gallery-card card-cyan">
+                    <div class="image-viewport">
+                        <img src="D:/MyProject/html/images/92f7777ef460541233cfa3f4aead3756.png" alt="PCB全铺铜网络拓扑图">
+                    </div>
+                    <p>PCB 2D 实线高载流布线与大面积铺铜图</p>
+                </div>
+                <div class="gallery-card card-cyan">
+                    <div class="image-viewport">
+                        <img src="D:/MyProject/html/images/466d3a32b64b99257625f83362b154af.png" alt="管脚引脚功能表">
+                    </div>
+                    <p>TP4056 ESOP8 芯片管脚引脚功能详解表</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>📝 双课题通关工程总结</h2>
+            <p>
+                本周通过“艺术衍生文创（校庆徽章）”与“硬核工业级控制（锂电池充电板）”这两个极具跨度视角的 PCB 课题通关，我真正走通了从一纸原理图符号到具备可量产性实体板卡的工程飞跃。
+                <br><br>
+                在徽章设计中，我学会了在满足机械尺寸（Outline）和美学边界的前提下，如何妥善布局 1mm 粗导线，并深刻理解了“拐弯必须 45°”这一防止敷铜层在酸性蚀刻液中产生“酸角过蚀”的黄金工业标准。而在 TP4056 充电板的重构中，面对 1A 大电流恒流充电带来的高发热量，我吃透了 ESOP-8 封装底层散热热流的设计逻辑，通过大面积 GND 铺铜层（Copper Pour）和宽体 VCC 电源实线填充，为电路筑起了牢固的热传导与信号完整性屏障。
+                <br><br>
+                五个核心工程图纸的完美合流，不仅夯实了我的 EDA 研发功底，更让我完成了大二硬件生命周期中一次完美的跨越！
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn current">第8周</a>
+            <a href="week9.html" class="nav-link-btn">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </main>
+
+    <script>
+        // 自动路径重定向脚本：当本地路径（file:///协议）触发安全沙箱阻断时，自动转为通用的工程相对目录
+        document.querySelectorAll('img').forEach(function(img) {
+            img.addEventListener('error', function() {
+                console.warn('正在重定向匹配本地图片目录资源...');
+                if(!img.getAttribute('src').startsWith('.')){
+                    var filename = img.getAttribute('src').split('/').pop();
+                    img.setAttribute('src', './images/' + filename);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

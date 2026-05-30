@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第3周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-green: #34d399;
+            --accent-mint: #059669;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部粘性玻璃导航 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 文章主体容器 */
+        .article-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 巨幕标题头 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-green), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-secondary); font-size: 1.1rem; font-weight: 300; }
+
+        /* 内容卡片 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; }
+
+        /* 高级流线拓扑图布局 */
+        .flow-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 16px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+
+        .flow-node {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 14px 28px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.1);
+            white-space: nowrap;
+        }
+
+        .flow-arrow {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+            padding: 0 10px;
+        }
+
+        /* 极客终端代码箱式设计 */
+        .terminal-container {
+            background: #090d16;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .terminal-header {
+            background: #111827;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .terminal-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+        .dot-r { background: #ef4444; }
+        .dot-y { background: #eab308; }
+        .dot-g { background: #22c55e; }
+        .terminal-title { color: var(--text-secondary); font-size: 0.8rem; font-family: monospace; margin-left: 5px; }
+
+        .code-box {
+            padding: 22px;
+            color: #a7f3d0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .code-comment { color: #4b5563; font-style: italic; display: inline-block; }
+
+        /* 横向多级周切换条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: var(--accent-green);
+            color: #0f172a;
+            border-color: var(--accent-green);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 3 周学习日志</h1>
+            <p>技术工程基石：分布式版本控制 Git 核心体系入门</p>
+        </header>
+
+        <section class="card-section">
+            <h2>一、什么是 Git？</h2>
+            <p>
+                Git 是一款极其卓越的开源分布式版本控制系统，于 2005 年由 Linux 之父 Linus Torvalds 亲手缔造。它的核心使命在于高效率、非线性地持续追踪大型软件开发周期中的各种源文件代码变化。通过在本地独立建立全套版本快照数据库，它完美支持了多线分支并行研发，成为现代团队协同工程体系中不可剥离的绝对枢纽。
+            </p>
+        </section>
+
+        <section class="card-section">
+            <h2>二、Git 底层数据分流工作链</h2>
+            <p>在日常的版本提交、检出与回溯管理中，Git 内部的数据在这三个逻辑区块间进行安全流转：</p>
+            
+            <div class="flow-wrapper">
+                <div class="flow-node">📂 局部工作区 (Working Dir)</div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-node">📥 索引暂存区 (Stage / Index)</div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-node">📦 本地仓库 (Local Repo)</div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>三、本地基操与远程同步终端指令集</h2>
+            <p>下面是我对本周练习高频使用的两组核心命令进行的模块化整理：</p>
+            
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-r"></span><span class="terminal-dot dot-y"></span><span class="terminal-dot dot-g"></span>
+                    <span class="terminal-title">git-local-management.sh</span>
+                </div>
+                <div class="code-box">git init          <span class="code-comment"># 在当前目标目录初始化全新的 Git 虚拟控制树</span>
+git add .         <span class="code-comment"># 将全量变更的源文件打包追踪推进到暂存区</span>
+git commit -m "feat: init log framework"  <span class="code-comment"># 锁定暂存区快照，永久提交入本地版本库</span></div>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-r"></span><span class="terminal-dot dot-y"></span><span class="terminal-dot dot-g"></span>
+                    <span class="terminal-title">git-remote-sync.sh</span>
+                </div>
+                <div class="code-box">git remote add origin https://gitee.com/...   <span class="code-comment"># 绑定远端云端存储库别名</span>
+git push origin main                          <span class="code-comment"># 将本地主干分支快照推升至云端主线</span>
+git pull origin main                          <span class="code-comment"># 拉取远端云端仓库的最新合并块反哺本地</span></div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>📝 本周归纳心得</h2>
+            <p>
+                这一周的实操通关让我真正领略到了现代化工程管理的艺术。Git 最为惊艳的地方在于其轻量级的分支模型（Branching），它允许我们在完全不干扰线上主链路运行的真空状态下，任意拉出分身分支去测试复杂的新特性，确认无误后再无缝合并。目前，我已经顺利通过 Gitee 社区搭建起了全套个人的代码生命周期仓库。接下来的硬核创客周里，我提交的每一段固件、每一个页面都将通过它来进行安全托管。
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn current">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="week-btn">第9周</a>
+            <a href="week10.html" class="week-btn">第10周</a>
+        </nav>
+    </main>
+
+</body>
+</html>

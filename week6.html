@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第6周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-purple: #c084fc;
+            --accent-pink: #f43f5e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部导航 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-purple);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 文章容器 */
+        .article-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 标题头 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-secondary); font-size: 1.1rem; font-weight: 300; }
+
+        /* 核心板块卡片 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; }
+
+        /* 黑客指令终端代码框 */
+        .terminal-box-wrapper {
+            background: #090d16;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .terminal-top-panel {
+            background: #111827;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .terminal-status-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #eab308; }
+        .dot-green { background: #22c55e; }
+        .terminal-panel-title { color: var(--text-secondary); font-size: 0.8rem; font-family: monospace; margin-left: 5px; }
+
+        .terminal-code-area {
+            padding: 22px;
+            color: #e2e8f0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .code-keyword { color: #f43f5e; font-weight: bold; }
+        .code-include { color: #38bdf8; }
+        .code-annotation { color: #4b5563; font-style: italic; }
+
+        /* 列表配置框 */
+        .tech-list-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 15px;
+        }
+        .tech-list-box ul { list-style: none; }
+        .tech-list-box li { margin-bottom: 12px; color: #cbd5e1; font-size: 1.02rem; }
+        .tech-list-box strong { color: var(--accent-purple); }
+
+        /* 视频媒体矩阵面板 */
+        .media-video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .media-player-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .media-player-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(192, 132, 252, 0.3);
+            box-shadow: 0 15px 30px rgba(192, 132, 252, 0.15);
+        }
+
+        .video-viewport {
+            width: 100%;
+            height: 160px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .video-viewport video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .media-player-card p {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* 底部导航条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: var(--accent-purple);
+            color: #0f172a;
+            border-color: var(--accent-purple);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 6 周学习日志</h1>
+            <p>嵌入式固件计算：底层固件 WiFi 通信链路配置与微秒级 PWM 舵机控制驱动</p>
+        </header>
+
+        <section class="card-section">
+            <h2>一、嵌入式计算概述</h2>
+            <p>
+                嵌入式计算（Embedded Computing）是指将高度专用化的微型计算机硬软件总线系统彻底嵌入到目标工业设备或应用系统核心中，以达成高自主性计算与动态控制的使能技术。它是当代万物互联物联网（IoT）、数字化智能家居控制中心以及精密工业机器人集群当之无愧的技术发动机。
+            </p>
+        </section>
+
+        <section class="card-section">
+            <h2>二、固件网络层：WiFi 无线网络节点连接配置</h2>
+            <p>本周首要任务是通过编写固件调动板载网络通信协议栈，让开发板具备主动接入局域网并获取云端 IP 的数据连接能力：</p>
+            
+            <div class="terminal-box-wrapper">
+                <div class="top-navbar-panel top-navbar-panel terminal-top-panel">
+                    <span class="terminal-status-dot dot-red"></span><span class="terminal-status-dot dot-yellow"></span><span class="terminal-status-dot dot-green"></span>
+                    <span class="terminal-panel-title">esp32_wifi_firmware.ino</span>
+                </div>
+                <div class="terminal-code-area"><span class="code-annotation">// ESP32 网络接入底层引擎架构</span>
+<span class="code-include">#include &lt;WiFi.h&gt;</span>
+
+<span class="code-keyword">const char</span>* ssid = <span class="code-include">"你的WiFi网络名称"</span>;
+<span class="code-keyword">const char</span>* password = <span class="code-include">"你的WiFi网络密码"</span>;
+
+<span class="code-keyword">void</span> <span class="code-keyword">setup</span>() {
+  WiFi.begin(ssid, password); <span class="code-annotation">// 唤醒网络状态机</span>
+  <span class="code-keyword">while</span> (WiFi.status() != WL_CONNECTED) {
+    delay(500); <span class="code-annotation">// 阻塞轮询，等待握手完成</span>
+  }
+}</div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>三、硬件控制层：微秒级 PWM 脉宽调制舵机驱动原理</h2>
+            <p>舵机属于典型的前沿闭环角度反馈伺服控制器。为了精准掌控其物理旋转角度，必须向控制端总线持续轰入精确的角度信号：</p>
+            <div class="tech-list-box">
+                <ul>
+                    <li>🎛️ <strong>底层控制信号</strong>：采用高端 PWM（脉冲宽度调制）技术控制。</li>
+                    <li>📐 <strong>物理偏转范围</strong>：支持机械全角度：0度 ~ 180度 精密偏转。</li>
+                    <li>⏱️ <strong>工业控制频率</strong>：严格维持在全球标准的 50Hz 基准控制频率（即20ms的控制波形周期）。</li>
+                    <li>🌊 <strong>精确脉冲占空比</strong>：发射 0.5ms方波 对应 0度极限位置，发射 2.5ms方波 对应 180度反向极限。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>四、软硬件联合调试多视角演示</h2>
+            <p>以下是我本周完成底层固件封装后的多角度联合实调物理反馈视频：</p>
+            
+            <div class="media-video-grid">
+                <div class="media-player-card">
+                    <div class="video-viewport">
+                        <video controls poster="images/2026-05-30_15_26_59.jpg">
+                            <source src="images/2026-05-30_15_26_59.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p>📶 WiFi 广域网络握手联调</p>
+                </div>
+                <div class="media-player-card">
+                    <div class="video-viewport">
+                        <video controls poster="images/2026-05-30_15_27_04.jpg">
+                            <source src="images/2026-05-30_15_27_04.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p>🎚️ PWM 舵机驱动角度微操</p>
+                </div>
+                <div class="media-player-card">
+                    <div class="video-viewport">
+                        <video controls poster="images/2026-05-30_15_27_10.jpg">
+                            <source src="images/2026-05-30_15_27_10.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p>🔧 软硬件综合并发测试</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>本周总结</h2>
+            <p>
+                本周的嵌入式开发是一场从“无形软件逻辑”跃迁到“有形机械运转”的硬核实战。通过用C++固件彻底打通 ESP32 的 WiFi 协议栈和定时器产生精准的脉冲波，我亲眼看见伺服电机的转轴依照代码的意图进行毫厘不差的扭转。这种纯粹的控制快感是软件模拟永远无法替代的。网络通信与执行机构的合二为一，为我下一周即将展开的中期创客大项目——网络气象时间桌面电视，打下了坚实的技术地基。
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn current">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="nav-link-btn">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </main>
+
+</body>
+</html>

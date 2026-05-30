@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第4周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-gold: #eab308;
+            --accent-amber: #d97706;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部玻璃导航 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 内容容器 */
+        .article-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 标题头 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-gold), #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-secondary); font-size: 1.1rem; font-weight: 300; }
+
+        /* 核心内容板块 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; }
+
+        /* 玻璃展示列表框 */
+        .glass-list-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 15px;
+        }
+        .glass-list-box ul { list-style: none; }
+        .glass-list-box li { margin-bottom: 12px; color: #cbd5e1; font-size: 1.02rem; }
+        .glass-list-box li:last-child { margin-bottom: 0; }
+        .glass-list-box strong { color: var(--accent-gold); }
+
+        /* 3D 成果交互画廊 */
+        .image-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .gallery-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(234, 179, 8, 0.3);
+            box-shadow: 0 15px 30px rgba(234, 179, 8, 0.1);
+        }
+
+        .image-viewport {
+            width: 100%;
+            height: 190px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: #090d16;
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-card p {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* 底部导航条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: var(--accent-gold);
+            color: #0f172a;
+            border-color: var(--accent-gold);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 4 周学习日志</h1>
+            <p>数字化三维制造：从CAD空间建模到3D打印技术实践</p>
+        </header>
+
+        <section class="card-section">
+            <h2>一、什么是 3D 打印？</h2>
+            <p>
+                3D 打印（3D Printing）属于快速成型技术的一种。它以数字三维空间模型文件为流转核心基础，通过运用粉末状高强度金属、工程硬质塑料等各种可粘合的耗材材料，采用工业级数字技术材料打印机，通过逐层叠加、精密打印的方式把计算机内的数据构筑转化为三维物理空间物体的过程。
+            </p>
+        </section>
+
+        <section class="card-section">
+            <h2>二、3D 打印的工作流水链</h2>
+            <div class="glass-list-box">
+                <ul>
+                    <li>🎯 <strong>1. 建模设计</strong>：启动CAD或三维网格曲面建模软件，无缝创建完整的数字3D骨架模型。</li>
+                    <li>🥞 <strong>2. 切片处理</strong>：将设计好的网格导出为STL等格式，输入切片引擎，计算并解构成无数层薄片数据。</li>
+                    <li>🔥 <strong>3. 逐层打印</strong>：把生成的G代码指令输入打印机，机械喷头严格依照切片轨迹逐层堆积熔融材料。</li>
+                    <li>✨ <strong>4. 后处理阶段</strong>：剥离复杂的外部支撑结构，对模型形体进行研磨、物理抛光、表面上色等后加工。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>三、我的 3D 造型实践案例</h2>
+            <p>本周我深度探索了曲面和机械建模空间，设计并渲染了一款精致极简的金属戒指模型。以下为具体的造型演进节点：</p>
+            
+            <div class="image-gallery-grid">
+                <div class="gallery-card">
+                    <div class="image-viewport"><img src="images/ring-sketch.jpg" alt="戒指草图设计"></div>
+                    <p>📐 工业级几何草图设计</p>
+                </div>
+                <div class="gallery-card">
+                    <div class="image-viewport"><img src="images/ring-model.jpg" alt="戒指3D模型"></div>
+                    <p>🔧 曲面网格3D实体建模</p>
+                </div>
+                <div class="gallery-card">
+                    <div class="image-viewport"><img src="images/ring-render.jpg" alt="戒指渲染效果"></div>
+                    <p>✨ 物理环境材质渲染</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>四、3D 打印的高精尖核心应用领域</h2>
+            <div class="glass-list-box">
+                <ul>
+                    <li>🏭 <strong>先进制造业</strong>：实现高度定制化的精密零部件制造、快速手板样机原型验证。</li>
+                    <li>🩺 <strong>现代生物医疗</strong>：定制高密合度的骨骼骨架假肢、手术演练模型，乃至活性生物细胞打印。</li>
+                    <li>🏢 <strong>前沿建筑工业</strong>：打印复杂的异形建筑微缩沙盘模型，甚至是工程混凝土房屋一体化灌注。</li>
+                    <li>🎓 <strong>高等教育科研</strong>：让复杂的几何抽象机构模型变成直观可感的硬核教学教具。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>📝 本周归纳心得</h2>
+            <p>
+                这一周的探维实践彻底打开了我的空间想象力和硬件思维。通过亲手打磨这枚戒指模型，我真正走通了从“灵感概念 ➔ 机械草图 ➔ 实体网格 ➔ 真实渲染”的研发闭环。3D 打印技术赋予了创客将任意天马行空的数据符号一键实体化成现实产物的魔法，是整个创客运动最硬核的技术底座。未来，我计划进一步走入物理操作车间，将这段代码与切片数据真正输入机器，让属于我的设计在喷头的热熔中真正诞生。
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn current">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="nav-link-btn">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </main>
+
+</body>
+</html>

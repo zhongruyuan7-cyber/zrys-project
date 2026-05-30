@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第5周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #6366f1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部导航 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 文章容器 */
+        .article-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 标题巨幕 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-indigo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-secondary); font-size: 1.1rem; font-weight: 300; }
+
+        /* 核心板块 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; }
+
+        /* 核心工具矩阵 */
+        .tools-showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-hardware-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 10px;
+            border-radius: 14px;
+            text-align: center;
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .tool-hardware-item:hover {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* 焊接大图艺术板 */
+        .hardware-img-viewport {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .hardware-img-viewport img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 列表容器 */
+        .tech-list-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 15px;
+        }
+        .tech-list-box ul { list-style: none; }
+        .tech-list-box li { margin-bottom: 12px; color: #cbd5e1; font-size: 1.02rem; }
+        .tech-list-box li:last-child { margin-bottom: 0; }
+        .tech-list-box strong { color: var(--accent-blue); }
+
+        /* 底部导航条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: var(--accent-blue);
+            color: #0f172a;
+            border-color: var(--accent-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 5 周学习日志</h1>
+            <p>电子电路硬件重构：精密电路焊接与高端物联网开发板 ESP32 组装</p>
+        </header>
+
+        <section class="card-section">
+            <h2>一、什么是电子焊接？</h2>
+            <p>
+                电子焊接是一种使用加热熔融的低熔点金属（焊锡），将分离的电子元器件引脚与印刷电路板（PCB）金属焊盘牢固结合、从而达成微米级物理电气连通的核心工艺。它是整个硬件电子制造体系的核心生命线，良好的焊点不仅决定了电子信号能否稳定高速传导，更构成了设备抗机械震动的基石。
+            </p>
+        </section>
+
+        <section class="card-section">
+            <h2>二、核心工艺焊接工具矩阵</h2>
+            <p>工欲善其事，必先利其器。打造高纯度防虚焊焊点，需要调动以下模块化的硬核工具组件：</p>
+            <div class="tools-showcase-grid">
+                <div class="tool-hardware-item">🔧 恒温电烙铁</div>
+                <div class="tool-hardware-item">📦 活性焊锡丝</div>
+                <div class="tool-hardware-item">🌡️ 高纯助焊剂</div>
+                <div class="tool-hardware-item">🧹 强力吸锡器</div>
+                <div class="tool-hardware-item">🔍 桌面放大镜</div>
+                <div class="tool-hardware-item">👁️ 激光护目镜</div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>三、我的板载硬件焊接实物成果</h2>
+            <p>本周我迎来了真正意义上的硬件挑战：独立完成了高端核心物联网开发板 ESP32 的全量排针与拓展贴片组件的电气焊接！以下为完工后的电路板形态图：</p>
+            <div class="hardware-img-viewport">
+                <img src="images/IMG_20260530_152135.jpg" alt="我焊接的ESP32开发板">
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>四、五步标准焊接工艺与排错技巧</h2>
+            <div class="tech-list-box">
+                <ul>
+                    <li>🧼 <strong>1. 表面清洁</strong>：清除电路焊盘与元器件金属排针上的浮灰与氧化层，露出亮线层。</li>
+                    <li>🔥 <strong>2. 预热引入</strong>：电烙铁头呈45度角夹触排针与焊盘，协同预热2秒，为热传导做准备。</li>
+                    <li>💧 <strong>3. 送丝融化</strong>：平稳向结合点引入锡丝，使其瞬间熔解铺展，直到严丝合缝包裹焊盘。</li>
+                    <li>⚡ <strong>4. 撤丝留头</strong>：率先迅速移开锡丝，电烙铁头停留约1秒，保证锡液受热均匀、表面流平滑。</li>
+                    <li>🔍 <strong>5. 静态检查</strong>：严密排查焊点形态是否呈现完美的弧形“火山锥”状，斩断虚焊、桥接连锡。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>五、ESP32 核心硬核微处理器参数解构</h2>
+            <div class="tech-list-box">
+                <ul>
+                    <li>🧠 <strong>超强算力核心</strong>：搭载 32位 双核 Tensilica LX6 高性能处理器，主频直飙 240MHz。</li>
+                    <li>📡 <strong>无线全向通信</strong>：高集成度原生内嵌 2.4GHz WiFi 802.11 b/g/n 与低功耗蓝牙 (BLE 4.2)。</li>
+                    <li>🔌 <strong>庞大拓扑引脚</strong>：输出34个多功能可编程 GPIO 节点，全面支持 PWM、I2C、SPI 硬件协议。</li>
+                    <li>🔮 <strong>无限开发前景</strong>：是打造边缘边缘物联网沙盒、高阶智能家居网关、环境遥测传感器节点的理想芯片。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>本周总结</h2>
+            <p>
+                本周的硬件焊接实践是一场极度考验专注力与耐心的精细修行。电烙铁接近400度高温的热传导让我明白：一个完美的焊点绝不仅仅是加热和锡的融化，更是一场时间和温度的精确微操。随着这块被我亲手点亮电气生命的 ESP32 诞生，我真正拿到了通往“数字物联网”大门的实体钥匙。在下一阶段，我将开始为其注入软件代码之魂，实现软硬件真正的联合运转。
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn current">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="nav-link-btn">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </main>
+
+</body>
+</html>

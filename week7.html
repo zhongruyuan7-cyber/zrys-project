@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第7周</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 40px;
+            text-align: center;
+            color: #333;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #a8edea;
+            display: inline-block;
+        }
+
+        .section p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .team-box {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px 45px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 160px;
+            box-shadow: 0 5px 15px rgba(168, 237, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member .name {
+            font-size: 1.25em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .team-member .role {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .connection-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .connection-box table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .connection-box th,
+        .connection-box td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .connection-box th {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .connection-box tr:last-child td {
+            border-bottom: none;
+        }
+
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .step-box {
+            background: #f8f9fa;
+            padding: 22px;
+            border-radius: 12px;
+            display: flex;
+            gap: 22px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .step-box:hover {
+            background: #f0f8f8;
+            transform: translateX(5px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(168, 237, 234, 0.4);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 1.1em;
+        }
+
+        .step-content p {
+            color: #666;
+            margin: 0;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        /* 视频容器 */
+        .video-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: contain;
+        }
+
+        .video-fallback {
+            padding: 60px 20px;
+            color: #fff;
+        }
+
+        .video-fallback h4 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .video-fallback p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(168, 237, 234, 0.5);
+        }
+
+        .video-caption {
+            color: #fff;
+            margin-top: 15px;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .week-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .week-btn {
+            padding: 10px 22px;
+            border: 2px solid #a8edea;
+            border-radius: 28px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .week-btn:hover,
+        .week-btn.active {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #888;
+            font-size: 0.95em;
+            margin-top: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .team-box {
+                gap: 15px;
+            }
+
+            .team-member {
+                padding: 20px 30px;
+                min-width: 140px;
+            }
+
+            .step-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .step-number {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>第7周学习日志</h1>
+            <p>中期创客项目 - 桌面小电视</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>一、项目介绍</h2>
+                <p>
+                    本周我们完成了中期创客项目——桌面小电视！这是一款基于 ESP32-S2 Mini 开发板的智能设备，
+                    可以连接 WiFi 网络，实时显示不同城市的温度、天气和时间信息。
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>二、团队成员</h2>
+                <div class="team-box">
+                    <div class="team-member">
+                        <div class="name">钟如愿</div>
+                        <div class="role">硬件搭建 & 代码调试</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="name">王芯雅澜</div>
+                        <div class="role">3D建模 & 外壳设计</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>三、硬件连接</h2>
+                <div class="connection-box">
+                    <table>
+                        <tr>
+                            <th>OLED屏幕引脚</th>
+                            <th>ESP32引脚</th>
+                            <th>功能说明</th>
+                        </tr>
+                        <tr>
+                            <td>VCC</td>
+                            <td>3V3</td>
+                            <td>电源正极</td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td>GND</td>
+                            <td>电源负极</td>
+                        </tr>
+                        <tr>
+                            <td>D0</td>
+                            <td>GPIO 12</td>
+                            <td>时钟线 (SCL)</td>
+                        </tr>
+                        <tr>
+                            <td>D1</td>
+                            <td>GPIO 11</td>
+                            <td>数据线 (SDA)</td>
+                        </tr>
+                        <tr>
+                            <td>DC</td>
+                            <td>GPIO 7</td>
+                            <td>命令线</td>
+                        </tr>
+                        <tr>
+                            <td>CS</td>
+                            <td>GPIO 5</td>
+                            <td>片选线</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>四、软件准备</h2>
+                <div class="connection-box">
+                    <ul style="margin-left: 20px; color: #666; line-height: 2;">
+                        <li><strong>开发环境</strong>：Arduino IDE</li>
+                        <li><strong>开发板</strong>：Lolin S2 Mini</li>
+                        <li><strong>所需库</strong>：Adafruit SSD1306、Adafruit GFX Library、ArduinoJson</li>
+                        <li><strong>天气API</strong>：心知天气（需注册获取API Key）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>五、制作步骤</h2>
+                <div class="step-container">
+                    <div class="step-box">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>固定屏幕</h4>
+                            <p>将0.96寸OLED屏幕塞入3D打印前壳的窗口，在屏幕背面PCB边缘点少量热熔胶固定。</p>
+                        </div>
+                    </div>
+                    <div class="step-box">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>固定主板</h4>
+                            <p>将ESP32-S2 Mini放入外壳底部的固定柱上，确保Type-C接口正对着外壳背面的出线孔。</p>
+                        </div>
+                    </div>
+                    <div class="step-box">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>接线与理线</h4>
+                            <p>用10cm母对母杜邦线按引脚对应关系插紧，用细皮筋捆扎整理线缆。</p>
+                        </div>
+                    </div>
+                    <div class="step-box">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>配置代码</h4>
+                            <p>在心知天气官网注册获取API Key，修改代码中的ssid、password和apiKey。</p>
+                        </div>
+                    </div>
+                    <div class="step-box">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>烧录程序</h4>
+                            <p>用Type-C数据线连接电脑，点击Arduino IDE上传按钮。若失败，按住Boot键不放，按RST键再松开。</p>
+                        </div>
+                    </div>
+                    <div class="step-box">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>通电合盖</h4>
+                            <p>屏幕亮起并显示时间与天气后，扣上3D打印后盖，制作完成！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>六、成品展示</h2>
+                <div class="video-section">
+                    <div class="video-wrapper">
+                        <video controls preload="auto" playsinline>
+                            <source src="D:/MyProject/html/images/20260530160255.mp4" type="video/mp4">
+                            <source src="./images/20260530160255.mp4" type="video/mp4">
+                            
+                            <div class="video-fallback">
+                                <h4>🎬 桌面小电视功能演示</h4>
+                                <p>您的浏览器不支持视频播放，请下载视频查看</p>
+                                <a href="D:/MyProject/html/images/20260530160255.mp4" download="桌面小电视演示.mp4" class="download-btn">
+                                    ⬇️ 下载视频
+                                </a>
+                            </div>
+                        </video>
+                    </div>
+                    <div class="video-caption">🎬 桌面小电视功能演示</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>本周总结</h2>
+                <p>
+                    通过这次中期项目，我和王芯雅澜合作完成了一个功能完整的桌面小电视。在这个过程中，
+                    我学到了硬件连接、代码配置、调试排错等多方面的技能。团队协作让我们能够高效地完成任务，
+                    每个人发挥自己的特长。这个项目不仅锻炼了我的动手能力，也让我对物联网开发有了更深入的理解。
+                </p>
+            </div>
+
+            <div class="week-nav">
+                <a href="week1.html" class="week-btn">第1周</a>
+                <a href="week2.html" class="week-btn">第2周</a>
+                <a href="week3.html" class="week-btn">第3周</a>
+                <a href="week4.html" class="week-btn">第4周</a>
+                <a href="week5.html" class="week-btn">第5周</a>
+                <a href="week6.html" class="week-btn">第6周</a>
+                <a href="week7.html" class="week-btn active">第7周</a>
+                <a href="week8.html" class="week-btn">第8周</a>
+                <a href="week9.html" class="week-btn">第9周</a>
+                <a href="week10.html" class="week-btn">第10周</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📝 钟如愿的学习日志 | 记录成长的每一步</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.querySelector('video');
+            if (video) {
+                video.addEventListener('loadedmetadata', function() {
+                    console.log('视频元数据加载成功');
+                });
+                
+                video.addEventListener('error', function(e) {
+                    console.error('视频加载失败:', e);
+                    var fallback = document.querySelector('.video-fallback');
+                    if (fallback) {
+                        fallback.style.display = 'block';
+                    }
+                });
+
+                video.addEventListener('click', function() {
+                    if (video.paused) {
+                        video.play().catch(function(err) {
+                            console.log('自动播放被阻止，用户点击后播放');
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

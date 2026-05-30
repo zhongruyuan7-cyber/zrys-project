@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟如愿的学习日志 - 第9周</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #1e112a 50%, #2e0817 100%);
+            --panel-bg: rgba(255, 255, 255, 0.04);
+            --panel-border: rgba(255, 255, 255, 0.07);
+            --text-primary: #f8fafc;
+            --text-secondary: #0ea5e9;
+            --text-muted: #94a3b8;
+            --accent-coral: #ff6b4a;    /* 灵感橙 */
+            --accent-fuchsia: #d946ef;  /* 迷幻紫 */
+            --accent-yellow: #eab308;   /* 警告/高亮黄 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* 顶部粘性玻璃导航条 */
+        .top-navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9, 13, 22, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-home-btn {
+            color: var(--accent-coral);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .back-home-btn:hover { opacity: 0.8; }
+
+        /* 主体内容容器 */
+        .article-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 巨幕标题头 */
+        .article-hero {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 35px;
+        }
+
+        .article-hero h1 { 
+            font-size: 2.3rem; 
+            font-weight: 800; 
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--accent-coral), var(--accent-fuchsia));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-hero p { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+
+        /* 内容板块核心卡片 */
+        .card-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--accent-coral);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
+        }
+
+        .card-section p { color: #cbd5e1; font-size: 1.05rem; text-align: justify; margin-bottom: 15px; }
+
+        /* 金句框 */
+        .design-quote {
+            border-left: 4px solid var(--accent-fuchsia);
+            background: linear-gradient(to right, rgba(217, 70, 239, 0.05), transparent);
+            padding: 18px 22px;
+            border-radius: 0 14px 14px 0;
+            color: #e2e8f0;
+            font-style: italic;
+            margin: 20px 0;
+            font-size: 1.05rem;
+        }
+
+        /* 玻璃拟态用户画像卡片布局 */
+        .persona-container {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        .persona-avatar {
+            font-size: 3.5rem;
+            background: rgba(255,255,255,0.05);
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.15);
+        }
+        .persona-details h3 { font-size: 1.2rem; color: var(--text-primary); margin-bottom: 6px; }
+        .persona-details p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0; }
+        .persona-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .p-tag { font-size: 0.78rem; padding: 2px 10px; background: rgba(255,67,74,0.1); color: var(--accent-coral); border-radius: 4px; border: 1px solid rgba(255,67,74,0.15); }
+
+        /* 头脑风暴灵感看板网格 */
+        .brainstorm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .idea-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .idea-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(217, 70, 239, 0.3);
+            box-shadow: 0 10px 25px rgba(217, 70, 239, 0.1);
+        }
+        .idea-card::before {
+            content: '📌';
+            position: absolute;
+            top: -10px; right: 10px;
+            font-size: 1.1rem;
+        }
+        .idea-card h4 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text-primary); }
+        .idea-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
+
+        /* 五大设计思维步骤流 */
+        .dt-pipeline { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .dt-step-card {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.04);
+            padding: 22px; border-radius: 16px;
+            display: flex; gap: 20px; align-items: flex-start;
+            transition: all 0.3s;
+        }
+        .dt-step-card:hover { background: rgba(255,255,255,0.04); transform: translateX(5px); border-color: rgba(255, 107, 74, 0.25); }
+        .dt-badge {
+            background: linear-gradient(135deg, var(--accent-coral) 0%, var(--accent-fuchsia) 100%);
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; color: #090d16; font-size: 1rem; flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(255, 107, 74, 0.3);
+        }
+        .dt-txt h4 { color: var(--text-primary); font-size: 1.1rem; margin-bottom: 6px; font-weight: 600; }
+        .dt-txt p { color: var(--text-muted); font-size: 0.95rem; margin: 0; line-height: 1.6; }
+
+        /* 横向导航切换条 */
+        .week-nav-bar {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-link-btn:hover, .nav-link-btn.current {
+            background: linear-gradient(135deg, var(--accent-coral) 0%, var(--accent-fuchsia) 100%);
+            color: #090d16;
+            border-color: var(--accent-coral);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-navbar">
+        <a href="index.html" class="back-home-btn">🏠 返回仪表盘首页</a>
+        <span style="font-size: 0.9rem; color: var(--text-muted);">钟如愿的个人空间</span>
+    </nav>
+
+    <main class="article-container">
+        <header class="article-hero">
+            <h1>第 9 周学习日志</h1>
+            <p>方法论的洗礼：设计思维（Design Thinking）深度内嵌与终期大作业概念推演</p>
+        </header>
+
+        <section class="card-section">
+            <h2>🔮 一、设计思维的核心本质</h2>
+            <p>
+                设计思维（Design Thinking）并非一种纯粹视觉层面的艺术粉饰，而是一套<strong>以人为本（Human-Centered）</strong>的、用于求解复杂工程和创新问题的非线性创造性流派。它强调从目标受众的真实痛点与情感诉求出发，跨越工程技术的硬核壁垒，通过多维发散与快速原型迭代，寻找出兼具“技术可行性（Feasibility）”、“商业延展性（Viability）”与“用户渴望度（Desirability）”的最佳汇聚点。
+            </p>
+            <div class="design-quote">" 设计思维的终极奥义，在于卸下程序员的自嗨，用同理心俯身去倾听用户的呼吸。 "</div>
+        </section>
+
+        <section class="card-section">
+            <h2>👥 二、共情认知：终期作业用户画像白皮书</h2>
+            <p>在展开本学期最终大作业的软硬件集成之前，我们首先跳出纯代码思维，对目标受众——交大计算机系高负荷、长期直面屏幕的“赛博原住民”展开深度共情，绘制出精准的典型用户画像：</p>
+            
+            <div class="persona-container">
+                <div class="persona-avatar">🧑‍💻</div>
+                <div class="persona-details">
+                    <h3>典型用户：小陈 (交大计算机系大二学生 / 资深独立开发者)</h3>
+                    <p><strong>底层痛点</strong>：全天深陷于密集复杂的算法课设和无止境的代码编译中。桌面凌乱分散，手机通知频繁打断专注流（Deep Work）；长期面对黑白冷酷的 IDE 终端界面，极度缺乏情绪宣泄口与智能化陪伴感。</p>
+                    <div class="persona-tags">
+                        <span class="p-tag"># 信息过载疲劳</span>
+                        <span class="p-tag"># 专注流频繁中断</span>
+                        <span class="p-tag"># 渴望桌面温情化交互</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>🛠️ 三、设计思维 5 大阶段的工程级实战落地</h2>
+            <p>基于上述同理心剖析，我正式将设计思维模型全量注入终期结题大作业——<strong>《CyberPulse：基于大模型的桌面情感交互微终端》</strong>的架构推演中：</p>
+            
+            <div class="dt-pipeline">
+                <div class="dt-step-card">
+                    <div class="dt-badge">1</div>
+                    <div class="dt-txt">
+                        <h4>Empathize (共情) ➔ 沉 deeply 捕捉诉求</h4>
+                        <p>通过现场微观访谈、桌面行为分析，发现用户真正需要的不是另一个臃肿的手机 App，而是一个独立驻留在物理桌面、能无感同步状态、提供即时动态反馈的情感微载体。</p>
+                    </div>
+                </div>
+                <div class="dt-step-card">
+                    <div class="dt-badge">2</div>
+                    <div class="dt-txt">
+                        <h4>Define (定义) ➔ 精准提炼核心挑战</h4>
+                        <p>将模糊的诉求锁定为核心工程挑战：“如何利用低功耗微处理器（ESP32-S2）构建一个兼具高频轻量化大模型动态多模态输出、且绝不侵占传统桌面空间的智能伴侣终端？”</p>
+                    </div>
+                </div>
+                <div class="dt-step-card">
+                    <div class="dt-badge">3</div>
+                    <div class="dt-txt">
+                        <h4>Ideate (头脑风暴) ➔ 创意颗粒度无限发散</h4>
+                        <p>完全打破常规显示限制，抛弃平庸的方形外壳，构思融入可触控的动态呼吸呼吸灯、基于情绪向量的像素表情、以及联动微型舵机进行物理拍打反馈的硬核脑洞。（详见下方看板）</p>
+                    </div>
+                </div>
+                <div class="dt-step-card">
+                    <div class="dt-badge">4</div>
+                    <div class="dt-txt">
+                        <h4>Prototype (原型构建) ➔ 以极低成本具象化</h4>
+                        <p>不急于立刻画PCB。先采用粗糙卡纸和3D旧打印料件拼接基础形体（低保真原型）；随后通过面包板飞线快速连接大尺寸OLED，跑通流式文本解析，用最快速度求证全系统通信链路。</p>
+                    </div>
+                </div>
+                <div class="dt-step-card">
+                    <div class="dt-badge">5</div>
+                    <div class="dt-txt">
+                        <h4>Test (测试优化) ➔ 反馈驱动迭代闭环</h4>
+                        <p>邀请同寝室的极客同学进行实机交互，捕捉到了“强光下OLED像素对比度过低”和“大语言模型API调用延迟偶尔波动”的真实反馈，为终期结题的软硬件固件重构明确了优化轨。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>💡 四、头脑风暴：CyberPulse 功能灵感看板</h2>
+            <p>在设计思维的 Ideate 阶段，我使用画板工具进行了肆无忌惮的头脑风暴，筛选并沉淀出了以下 4 项极具极客浪漫气息的核心创意特性卡：</p>
+            
+            <div class="brainstorm-grid">
+                <div class="idea-card">
+                    <h4>🔮 多模态像素流表情</h4>
+                    <p>利用微秒级指令，将大语言模型反馈的情绪权重实时打散为 128x64 矩阵的复古动态像素动画，达成细腻的情感传达。</p>
+                </div>
+                <div class="idea-card">
+                    <h4>🌊 赛博番茄专注舱</h4>
+                    <p>当用户在电脑端敲击代码时，微终端自动进入暗色呼吸发光波形，帮用户阻断外界杂乱无章的通知干扰，守护心流状态。</p>
+                </div>
+                <div class="idea-card">
+                    <h4>👋 舵机物理机械振打</h4>
+                    <p>当云端编译报错（Error）或大语言模型产生剧烈情绪波动时，通过底层 PWM 驱动舵机，物理拍打桌面提醒用户及时喝水休憩。</p>
+                </div>
+                <div class="idea-card">
+                    <h4>📶 局域网无感 API 管道</h4>
+                    <p>构建轻量级 HTTP 监听总线，无需任何线缆驳接，即可在后台实时抓取电脑端 CPU 算力负载并转换为终端特效。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <h2>📝 本周归纳心得</h2>
+            <p>
+                第 9 周的设计思维洗礼，彻底重塑了我的硬件研发观。在此之前，作为计算机系的学生，我往往习惯于“炫技式开发”——一味地去卷代码结构的复杂性、卷芯片的主频，却忽略了产品最终是要去服务于活生生的人。
+                <br><br>
+                设计思维逼迫我从“唯技术论”的象牙塔里走出来，站在小陈这样真实焦虑、疲惫的开发者视角，去重新审视每一个元器件、每一根 45° PCB 走线存在的价值。随着《CyberPulse》低保真原型的顺利跑通，终期大作业的骨架已经完全丰满。保持渴望，全力冲刺，我无比期待在接下来的第 10 周大答辩中，让这台凝聚了十周汗水的智能桌面伴侣完美绽放！
+            </p>
+        </section>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="nav-link-btn current">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </main>
+
+</body>
+</html>
