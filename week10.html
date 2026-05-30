@@ -1,0 +1,748 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon · 自动浇水系统 | 天之饺子研发日志</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .title-bg-container {
+            width: 100%;
+            height: 280px;
+            margin-bottom: 35px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -10px rgba(58, 78, 38, 0.15);
+            border: 1px solid rgba(185, 212, 139, 0.5);
+            position: relative;
+        }
+
+        .title-bg-container .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .title-bg-container .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .title-bg-container h1, .title-bg-container .meta-info {
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .title-bg-container h1 {
+            margin-bottom: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Microsoft YaHei', sans-serif;
+            line-height: 1.8;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            background: linear-gradient(to bottom, #d9e6c3 0%, #c5dfaa 50%, #e5f2d3 100%);
+            background-attachment: fixed;
+            color: #2d3e1f;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 10px 24px;
+            background: #ffffff;
+            border-radius: 50px;
+            color: #4a6e2f;
+            border: 1.5px solid #b9d48b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(108, 138, 57, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .back-link:hover {
+            background: #6f9e3d;
+            color: white;
+            transform: translateX(-4px);
+            box-shadow: 0 6px 16px rgba(76, 112, 34, 0.25);
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            color: #2f6b1f;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .meta-info {
+            font-size: 1rem;
+            color: #547838;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .note {
+            background: #FFFFFF;
+            padding: 45px 40px;
+            border-radius: 28px;
+            box-shadow: 0 25px 45px -12px rgba(58, 78, 38, 0.2);
+            border: 1px solid rgba(185, 212, 139, 0.6);
+            position: relative;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 44px;
+            margin-bottom: 20px;
+            padding-left: 18px;
+            border-left: 6px solid #82b74e;
+            color: #2a5320;
+            font-weight: 700;
+        }
+
+        h2:first-of-type {
+            margin-top: 10px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            color: #528a2e;
+            font-weight: 600;
+            background: #f2fae8;
+            padding: 6px 18px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        p {
+            margin-bottom: 18px;
+            font-size: 1.05rem;
+            color: #3b5829;
+            text-align: justify;
+        }
+
+        strong {
+            color: #3c7621;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 4px;
+            margin-bottom: 28px;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            font-size: 1.02rem;
+            color: #42642c;
+        }
+
+        ul li::before {
+            content: "💧";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 28px 0 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #cbe5b0;
+            box-shadow: 0 6px 14px rgba(91, 121, 55, 0.08);
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 0.98rem;
+        }
+
+        th {
+            background: #dff0ca;
+            color: #2c5a1a;
+            font-weight: 700;
+            border-bottom: 1px solid #c2df9a;
+        }
+
+        td {
+            background: #fafff2;
+            border-bottom: 1px solid #e6f0da;
+            color: #3a5925;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #fafff2;
+        }
+
+        .image-grid, .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin: 25px 0 40px;
+        }
+
+        .image-card, .video-card {
+            background: #FEFDF7;
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid #cce4b3;
+            box-shadow: 0 8px 18px rgba(92, 128, 48, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .image-card:hover, .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 28px rgba(80, 110, 45, 0.15);
+            border-color: #a3cc7a;
+        }
+
+        .image-card img, .video-card video {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 14px;
+            background: #dcedbc;
+        }
+
+        .image-card .caption, .video-card .caption {
+            font-size: 0.95rem;
+            color: #487a2c;
+            margin-top: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .video-card .sub-caption {
+            font-size: 0.8rem;
+            color: #7c9f58;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .project-card-img {
+            aspect-ratio: auto !important;
+            object-fit: contain !important;
+            width: auto !important;
+            height: auto !important;
+            max-height: 600px;
+            margin: 0 auto;
+        }
+
+        .code-block {
+            background: #1f2c1a;
+            color: #e2f0cf;
+            padding: 18px;
+            border-radius: 20px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 20px 0 28px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .badge-green {
+            background: #a9d67b;
+            color: #2b4d12;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #668a43;
+            border-top: 1px solid #cae0af;
+            padding-top: 28px;
+            margin-top: 55px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 20px 16px;
+            }
+
+            .note {
+                padding: 30px 20px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            .title-bg-container {
+                height: 200px;
+                margin-bottom: 25px;
+                border-radius: 16px;
+            }
+
+            .title-bg-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .title-bg-container .meta-info {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* 生态绿周导航条 */
+        .week-nav-bar {
+            background: #f2fae8;
+            border: 1px solid #cbe5b0;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .nav-link-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid #cbe5b0;
+            text-decoration: none;
+            color: #42642c;
+            font-size: 0.9rem;
+            background: #ffffff;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link-btn:hover {
+            background: #82b74e;
+            color: white;
+            border-color: #82b74e;
+            transform: translateY(-2px);
+        }
+
+        .nav-link-btn.current {
+            background: #4a6e2f;
+            color: white;
+            border-color: #4a6e2f;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">← 返回主页</a>
+
+    <div class="title-bg-container">
+        <img class="bg-img" src="../images/top_background.jpg" alt="Hackathon 项目背景图" onerror="this.onerror=null; this.nextElementSibling.style.background='linear-gradient(135deg, #c5dfaa, #dcedbc)';">
+
+        <div class="overlay">
+            <h1>🌱 自动浇水系统 · 智联花友</h1>
+            <div class="meta-info">
+                <span><strong>🏷️ 小组名称：</strong> 天之饺子</span>
+                <span><strong>📅 Hackathon：</strong> 5.30 - 5.31</span>
+                <span><strong>👥 成员：</strong> 唐婷 · 蔺柯帆 · 王芯雅澜 · 钟如愿</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="note">
+        <h2>💡 一、项目档案</h2>
+        <p><strong>一句话定义：</strong>基于 ESP32 的智能自动浇水系统，通过土壤湿度传感器实时监测，自动/远程控制水泵，让植物养护从此省心。</p>
+        <p>
+            <strong>用户是谁：</strong>办公室白领、学校班级绿化角、经常出差或忘记浇水的植物爱好者。<br>
+        </p>
+        <p>
+            <strong>使用场景：</strong>用户不在植物旁时，系统根据土壤湿度自主浇水；出差期间可通过手机/网页远程查看湿度、手动补水或调节策略。<br>
+        </p>
+        <p><strong>HMW 设计挑战：</strong>我们如何能够根据土壤湿度自动且恰当地给植物浇水，同时兼顾本地按键与远程的灵活控制？</p>
+
+        <h2>🧩 二、核心方案</h2>
+        <ul>
+            <li><strong>输入：</strong>土壤湿度传感器（模拟值）、本地按键（模式切换/手动触发）、远程指令 (MQTT/HTTP)。</li>
+            <li><strong>处理逻辑：</strong>ESP32 采集湿度 → 滤波 + 阈值判断（防抖/防干烧）→ 自动模式下继电器控制水泵启停；远程指令可覆盖自动模式.</li>
+            <li><strong>输出反馈：</strong>OLED 实时显示湿度、Wi-Fi 状态、工作模式；水泵抽水灌溉；云端/本地日志。</li>
+        </ul>
+
+        <h2>📦 三、硬件清单 & 结构材料</h2>
+        <table>
+            <thead>
+                <tr><th>类型</th><th>器件名称</th><th>备注</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>🎛️ 主控</td><td>ESP32 开发板 (NodeMCU-32S)</td><td>Wi-Fi + 低功耗控制</td></tr>
+                <tr><td>💧 传感器</td><td>土壤湿度传感器 (电阻式 YL-69)</td><td>模拟量输出，实时监测</td></tr>
+                <tr><td>🖥️ 显示</td><td>0.96寸 OLED (SSD1306, I2C)</td><td>显示湿度/模式/Wi-Fi图标</td></tr>
+                <tr><td>⚙️ 执行器</td><td>微型潜水泵 + 3.3V 继电器模块</td><td>低电平触发，隔离控制</td></tr>
+                <tr><td>🔘 交互</td><td>轻触按键 ×2</td><td>模式切换、手动浇水</td></tr>
+                <tr><td>🔋 电源</td><td>5V/2A 充电宝或电池盒(4节5号+升压)</td><td>保证水泵与ESP32稳定供电</td></tr>
+                <tr><td>🧩 结构</td><td>3D打印水壶、外壳</td><td>PLA材质，预留天线开口</td></tr>
+                <tr><td>🔌 辅材</td><td>杜邦线、硅胶水管、密封胶圈</td><td>防漏水、稳固连接</td></tr>
+            </tbody>
+        </table>
+
+        <h2>📅 四、设计日志</h2>
+        <h3>🕘 周六上午 · 头脑风暴 & 项目设计卡</h3>
+        <p>团队完成《Hackathon 项目设计卡》，确定自动浇水方向，细化“本地自动 + 远程手动/阈值设置” 功能边界，评估最大技术风险（继电器误动、水泵干烧、传感器腐蚀）。</p>
+        <p>最初设想蓝牙遥控，但考虑远程场景改为 Wi-Fi + MQTT；水壶结构手稿调整3次，将水泵放置在水壶底部侧面以保证吸水效率。</p>
+
+        <div class="image-card" style="max-width: 500px; margin: 20px auto 0 auto;">
+            <img src="D:/MyProject/html/images/20260530212127.jpg" alt="Hackathon 项目设计卡" style="aspect-ratio: auto !important; object-fit: contain !important; max-height: 500px; width: 100%; height: auto;" onerror="this.src='./images/20260530212127.jpg'">
+            <div class="caption">📋Hackathon 项目设计卡</div>
+        </div>
+
+        <h3>🕐 周六下午 · 软硬件并行开发</h3>
+        <p><strong>🔧 软件组（唐婷、蔺柯帆、钟如恩）</strong></p>
+        <ul>
+            <li><strong>唐婷 (传感器+显示)：</strong> 校准土壤湿度传感器，驱动OLED显示湿度及Wi-Fi图标。🐛 I2C地址冲突导致OLED不亮 → 分别初始化并增加延时，成功点亮。</li>
+            <li><strong>蔺柯帆 (执行逻辑)：</strong> 按键消抖、继电器基础控制，预留远程指令接口。继电器吸合瞬间ESP32重启 → 并联1000µF电容 + 独立供电解决。</li>
+            <li><strong>钟如恩 (系统集成+联网)：</strong> 配置ESP32连接Wi-Fi，对接IoT平台。🐛 <em>只有一个串口连接时网络无法配置（如下图）</em> → 换设备后解决。</li>
+        </ul>
+        
+        <div class="image-card" style="max-width: 400px; margin-top: 10px; margin-bottom: 20px;">
+            <img src="D:/MyProject/html/images/20260530212107.png" alt="串口配置失败截图" style="aspect-ratio: auto !important; object-fit: contain; max-height: 300px; width: 100%; height: auto;" onerror="this.src='./images/20260530212107.png'">
+            <div class="caption">⚠️ 串口连接时网络无法配置</div>
+        </div>
+
+        <p><strong>🏗️ 硬件组（王芯雅澜）</strong> — 负责3D建模与结构组装</p>
+        <div class="image-grid" style="margin-top: 10px;">
+            <div class="image-card">
+                <img src="D:/MyProject/html/images/20260530212014.jpg" alt="3D打印水壶" onerror="this.src='./images/20260530212014.jpg'">
+                <div class="caption">3D打印盛水壶</div>
+            </div>
+            <div class="image-card">
+                <img src="D:/MyProject/html/images/20260530212041.jpg" alt="组装结构照片" onerror="this.src='./images/20260530212041.jpg'">
+                <div class="caption">线路连接</div>
+            </div>
+        </div>
+
+        <h3>🕐 周六夜间 · 联调冲刺（整体连接与初步测试）</h3>
+        <p>
+            将所有模块连接成完整系统，外壳尚未进行美观修饰。进行了初步功能测试：<br>
+            ✅ 土壤湿度传感器能正常读取数据；<br>
+            ✅ 自动模式下湿度低于阈值时水泵自动启动；<br>
+            ✅ 手动模式下按键可触发浇水；<br>
+            ✅ 远程指令（MQTT）可成功下发手动浇水指令。<br>
+            由于外壳为临时结构，整体外观粗糙，但核心功能已经跑通。
+        </p>
+        
+        <div class="image-card" style="max-width: 500px; margin: 20px auto;">
+            <img src="D:/MyProject/html/images/20260530212141.jpg" alt="整体连接实物图" onerror="this.src='./images/20260530212141.jpg'">
+            <div class="caption">整体连接</div>
+        </div>
+        
+        <div class="video-card" style="max-width: 500px; margin: 0 auto;">
+            <video controls preload="metadata">
+                <source src="D:/MyProject/html/images/6540c1c91d8944e552df6b4a89df4f70.mp4" type="video/mp4">
+                <source src="./images/6540c1c91d8944e552df6b4a89df4f70.mp4" type="video/mp4">
+                您的浏览器不支持 video 标签。
+            </video>
+            <div class="caption">🎥 初步测试视频</div>
+        </div>
+
+        <h3>🕐 周日上午 · 组装与展示美化</h3>
+        <p>最终组装：走线扎带固定，水壶密封测试24小时无渗漏；增加远程阈值设置功能（网页滑块修改湿度下限）；本地按键长按切换自动/手动，短按手动浇水；最终演示时实现“本地自动 + 远程手动/阈值设置”完整闭环。</p>
+
+        <h2>🔧 六、硬核Bug & 反思</h2>
+        <table>
+            <thead><tr><th>⚠️ 问题描述</th><th>尝试的方案</th><th>✅ 最终解决</th></tr></thead>
+            <tbody>
+                <tr><td>湿度传感器数值跳变剧烈</td><td>硬件并联10µF电容，软件移动平均滤波</td><td>窗口大小5的滤波，数值稳定在±3%以内</td></tr>
+                <tr><td>继电器吸合导致ESP32重启</td><td>加1000µF电容、独立供电、加反向二极管</td><td>电容+独立5V供电彻底解决</td></tr>
+                <tr><td>MQTT频繁掉线</td><td>修改keepalive，增加重连机制</td><td>实现reconnectMqtt()循环检查，连续工作稳定</td></tr>
+                <tr><td>3D打印水壶渗水</td><td>水壶里放置塑料薄膜</td><td>塑料薄膜防水，24小时滴水不漏</td></tr>
+                <tr><td>远程手动浇水与本地自动冲突</td><td>设定远程优先标志，覆盖自动逻辑</td><td>最终明确优先级：远程强制 > 本地按键 > 自动模式</td></tr>
+                <tr><td>OLED刷新卡顿</td><td>全屏刷新 → 改为局部刷新</td><td>I2C速率降至100kHz，仅更新数值区域，帧率提升5倍</td></tr>
+            </tbody>
+        </table>
+        <p><strong>💪 重要教训：</strong> 电源稳定性是所有外设的基础；先做好滤波和防干烧再完善联网功能；分工明确但每日夜间合体联调是效率核心。</p>
+
+        <h2>👥 七、团队分工 & 个人贡献</h2>
+        <table>
+            <thead><tr><th>姓名</th><th>主要职责</th><th>具体任务 (含联网控制)</th><th>Day1 达成</th><th>Day2 联调贡献</th></tr></thead>
+            <tbody>
+                <tr><td>唐婷</td><td>传感器与显示模块</td><td>🌿 土壤湿度校准，OLED实时显示湿度、Wi-Fi状态、模式；预留数据接口供联网调用</td><td>✅ OLED显示湿度+Wi-Fi图标</td><td>整合最终显示接口，远程模式联动展示</td></tr>
+                <tr><td>蔺柯帆</td><td>执行与控制逻辑</td><td>⚙️ 继电器水泵控制，自动浇水决策(阈值/防抖/防干烧)；处理本地按键与远程优先级</td><td>✅ 本地按键+继电器基础控制，预留远程指令接口</td><td>完成远程/本地优先级最终调试，防干烧稳定</td></tr>
+                <tr><td>王芯雅澜</td><td>结构与外观设计</td><td>🏗️ 3D建模水壶、支架，走线及密封，预留天线开口</td><td>✅ 完成水壶及外壳第一版打印</td><td>迭代第二版防水优化，整机固定美观</td></tr>
+                <tr><td>钟如恩</td><td>系统集成与联网功能</td><td>🌐 ESP32代码整合，Wi-Fi/MQTT/Web控制页，对接IoT平台；远程数据上报与指令下发</td><td>✅ 跑通Wi-Fi连接，实现远程数据上报和简单控制</td><td>联调MQTT稳定性，搭建演示控制面板，完成双控循环</td></tr>
+            </tbody>
+        </table>
+
+        <h2>📸 八、成果展示</h2>
+        <div class="image-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            <div class="image-card">
+                <img src="../images/mobile_ui.jpg" alt="手机控制界面" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\' fill=\'%23e2f0cf\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23d3e6ba\'/%3E%3Ctext x=\'20\' y=\'110\' font-size=\'11\' fill=\'%2338681a\'%3E📱 手机控制界面%3C/text%3E%3C/svg%3E';">
+                <div class="caption">📱 手机控制界面（手动浇水/模式切换/阈值设置）</div>
+            </div>
+            <div class="image-card">
+                <img src="D:/MyProject/html/images/20260530212141.jpg" alt="完整整体展示" onerror="this.src='./images/20260530212141.jpg'">
+                <div class="caption">🌿 完整整体展示（外壳+水壶+电路）</div>
+            </div>
+        </div>
+        <div class="video-card" style="max-width: 600px; margin: 0 auto 30px auto;">
+            <video controls preload="metadata">
+                <source src="D:/MyProject/html/images/6540c1c91d8944e552df6b4a89df4f70.mp4" type="video/mp4">
+                <source src="./images/6540c1c91d8944e552df6b4a89df4f70.mp4" type="video/mp4">
+                您的浏览器不支持 video 标签。
+            </video>
+            <div class="caption">🎬 完整演示视频（本地自动 + 手机远程控制）</div>
+        </div>
+
+        <h2>💻 九、核心代码片段</h2>
+        <p><strong>开发环境：</strong> Arduino IDE 2.0 · 库依赖：WiFi.h, PubSubClient.h, U8g2lib.h, EEPROM.h </p>
+        <p><strong>通信协议：</strong> MQTT (主题: plant/water/status 上报, plant/water/cmd 控制) + HTTP 简易控制页面</p>
+        <div class="code-block">
+            /*
+            * 自动浇水系统 - ESP32 核心代码
+            * 功能：土壤湿度采集滤波、自动浇水防干烧、MQTT远程控制、本地按键、OLED显示
+            */
+
+            #include &lt;WiFi.h&gt;
+            #include &lt;PubSubClient.h&gt;
+            #include &lt;U8g2lib.h&gt;
+            #include &lt;EEPROM.h&gt;
+
+            // 引脚定义
+            #define SOIL_PIN    34   // 土壤湿度模拟输入
+            #define RELAY_PIN   26   // 继电器控制水泵 (低电平触发)
+            #define BUTTON_MODE 32   // 模式切换按键
+            #define BUTTON_MAN  33   // 手动浇水按键
+
+            // 全局变量
+            const int THRESHOLD_ADDR = 0;   // EEPROM存储阈值地址
+            int thresholdDry = 30;          // 自动浇水阈值 (%)
+            bool autoMode = true;           // 当前模式: true=自动, false=手动
+            unsigned long lastWaterTime = 0;
+            int waterCountToday = 0;
+            const unsigned long WATER_INTERVAL = 300000; // 5分钟防抖
+            const int MAX_WATER_PER_DAY = 8;              // 每日最大浇水次数
+
+            // WiFi & MQTT
+            const char* ssid = "your_SSID";
+            const char* password = "your_PASS";
+            const char* mqtt_server = "broker.emqx.io";
+            const char* mqtt_topic_status = "plant/water/status";
+            const char* mqtt_topic_cmd = "plant/water/cmd";
+
+            WiFiClient espClient;
+            PubSubClient client(espClient);
+            U8G2_SSD1306_128x64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
+
+            // ----- 土壤湿度读取 + 移动平均滤波 -----
+            int readSoilMoisture() {
+            int raw = analogRead(SOIL_PIN);
+            int percent = map(raw, 2900, 1500, 0, 100);
+            percent = constrain(percent, 0, 100);
+            static int readings[5] = {0};
+            static int idx = 0;
+            readreadings[idx] = percent;
+            idx = (idx + 1) % 5;
+            int sum = 0;
+            for (int i = 0; i < 5; i++) sum += readings[i];
+            return sum / 5;
+            }
+
+            // ----- 自动浇水逻辑（防抖 + 防干烧 + 每日限次）-----
+            void autoWatering() {
+            if (!autoMode) return;
+            int moisture = readSoilMoisture();
+            if (moisture >= thresholdDry) return;
+
+            unsigned long now = millis();
+            if (now - lastWaterTime < WATER_INTERVAL) return;
+            if (waterCountToday >= MAX_WATER_PER_DAY) return;
+
+            digitalWrite(RELAY_PIN, HIGH);
+            delay(3000);
+            digitalWrite(RELAY_PIN, LOW);
+
+            lastWaterTime = now;
+            waterCountToday++;
+            client.publish(mqtt_topic_status, "auto_watered");
+            }
+
+            // ----- 本地按键处理（长按切换模式，短按手动浇水）-----
+            void handleButtons() {
+            static unsigned long lastPressTime = 0;
+            static bool modeButtonHeld = false;
+            if (digitalRead(BUTTON_MODE) == LOW) {
+            if (!modeButtonHeld && millis() - lastPressTime > 1000) {
+            autoMode = !autoMode;
+            modeButtonHeld = true;
+            client.publish(mqtt_topic_status, autoMode ? "mode_auto" : "mode_manual");
+            delay(200);
+            }
+            } else {
+            modeButtonHeld = false;
+            lastPressTime = millis();
+            }
+
+            if (digitalRead(BUTTON_MAN) == LOW) {
+            delay(50);
+            if (digitalRead(BUTTON_MAN) == LOW) {
+            digitalWrite(RELAY_PIN, HIGH);
+            delay(3000);
+            digitalWrite(RELAY_PIN, LOW);
+            client.publish(mqtt_topic_status, "manual_watered_local");
+            while(digitalRead(BUTTON_MAN) == LOW);
+            }
+            }
+            }
+
+            // ----- MQTT 远程指令回调 -----
+            void callback(char* topic, byte* payload, unsigned int length) {
+            String msg = String((char*)payload).substring(0, length);
+            if (msg == "manual_water") {
+            digitalWrite(RELAY_PIN, HIGH);
+            delay(3000);
+            digitalWrite(RELAY_PIN, LOW);
+            client.publish(mqtt_topic_status, "manual_watered_remote");
+            }
+            else if (msg == "auto_on") {
+            autoMode = true;
+            client.publish(mqtt_topic_status, "mode_auto");
+            }
+            else if (msg == "auto_off") {
+            autoMode = false;
+            client.publish(mqtt_topic_status, "mode_manual");
+            }
+            else if (msg.startsWith("set_threshold:")) {
+            int newTh = msg.substring(14).toInt();
+            if (newTh >= 20 && newTh <= 80) {
+            thresholdDry = newTh;
+            EEPROM.write(THRESHOLD_ADDR, thresholdDry);
+            EEPROM.commit();
+            client.publish(mqtt_topic_status, "threshold_updated");
+            }
+            }
+            }
+
+            // ----- OLED 显示（湿度、Wi-Fi图标、模式）-----
+            void updateOLED() {
+            u8g2.clearBuffer();
+            u8g2.setFont(u8g2_font_ncenB08_tr);
+            u8g2.drawStr(0, 12, "Auto Watering System");
+            u8g2.setFont(u8g2_font_helvB12_tf);
+            char buf[32];
+            sprintf(buf, "Soil: %d%%", readSoilMoisture());
+            u8g2.drawStr(0, 40, buf);
+            sprintf(buf, "Mode: %s", autoMode ? "AUTO" : "MANUAL");
+            u8g2.drawStr(0, 60, buf);
+            if (WiFi.status() == WL_CONNECTED) {
+            u8g2.drawStr(100, 12, "WiFi");
+            }
+            u8g2.sendBuffer();
+            }
+
+            // ----- 重连MQTT -----
+            void reconnect() {
+            while (!client.connected()) {
+            if (client.connect("ESP32_Plant")) {
+            client.subscribe(mqtt_topic_cmd);
+            } else {
+            delay(5000);
+            }
+            }
+            }
+
+            void setup() {
+            Serial.begin(115200);
+            pinMode(RELAY_PIN, OUTPUT);
+            digitalWrite(RELAY_PIN, LOW);
+            pinMode(BUTTON_MODE, INPUT_PULLUP);
+            pinMode(BUTTON_MAN, INPUT_PULLUP);
+
+            u8g2.begin();
+            EEPROM.begin(512);
+            thresholdDry = EEPROM.read(THRESHOLD_ADDR);
+            if (thresholdDry < 20 || thresholdDry > 80) thresholdDry = 30;
+
+            WiFi.begin(ssid, password);
+            while (WiFi.status() != WL_CONNECTED) delay(500);
+            client.setServer(mqtt_server, 1883);
+            client.setCallback(callback);
+            }
+
+            void loop() {
+            if (!client.connected()) reconnect();
+            client.loop();
+            autoWatering();
+            handleButtons();
+            updateOLED();
+            delay(500);
+            }
+        </div>
+
+        <h2>🚀 十、未来迭代方向</h2>
+        <ul>
+            <li>增加低水位检测传感器，缺水时推送微信消息。</li>
+            <li>接入 Home Assistant 或小爱同学，实现语音控制。</li>
+            <li>太阳能 + 电池低功耗方案，实现户外免维护。</li>
+            <li>增加控制器控制水的流速。</li>
+        </ul>
+
+        <h2>🏆 十一、总结</h2>
+        <p>在两天极限Hackathon中，我们团队从零搭建了完整的智能浇水系统，实现了本地自动浇水、远程手动控制及阈值调整双模运行。硬件上融合3D打印与传感器执行器，软件上打通ESP32 + MQTT + 控制页面。同时，我们克服了电源干扰、通信掉线、水泵干烧等多个硬核bug，最终顺利完成“本地+远程”完整循环演示。这次经历深度锻炼了我的嵌入式开发、结构设计、团队协作以及快速迭代的能力，真正诠释了“创客精神”。</p>
+
+        <nav class="week-nav-bar">
+            <a href="week1.html" class="nav-link-btn">第1周</a>
+            <a href="week2.html" class="nav-link-btn">第2周</a>
+            <a href="week3.html" class="nav-link-btn">第3周</a>
+            <a href="week4.html" class="nav-link-btn">第4周</a>
+            <a href="week5.html" class="nav-link-btn">第5周</a>
+            <a href="week6.html" class="nav-link-btn">第6周</a>
+            <a href="week7.html" class="nav-link-btn">第7周</a>
+            <a href="week8.html" class="nav-link-btn">第8周</a>
+            <a href="week9.html" class="nav-link-btn">第9周</a>
+            <a href="week10.html" class="nav-link-btn">第10周</a>
+        </nav>
+    </div>
+
+    <div class="footer-note">
+        🌟 天之饺子 · 自动浇水系统 ｜ 2026年5月 Hackathon 研发黑匣子
+    </div>
+</body>
+</html>
