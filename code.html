@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino 代码 · 自动浇水系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            background: linear-gradient(to bottom, #d9e6c3 0%, #c5dfaa 50%, #e5f2d3 100%);
+            background-attachment: fixed;
+            color: #2d3e1f;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 10px 24px;
+            background: #ffffff;
+            border-radius: 50px;
+            color: #4a6e2f;
+            border: 1.5px solid #b9d48b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(108, 138, 57, 0.15);
+            transition: all 0.25s ease;
+        }
+
+            .back-link:hover {
+                background: #6f9e3d;
+                color: white;
+                transform: translateX(-4px);
+                box-shadow: 0 6px 16px rgba(76, 112, 34, 0.25);
+            }
+
+        .code-container {
+            background: #1f2c1a;
+            color: #e2f0cf;
+            padding: 24px;
+            border-radius: 28px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #668a43;
+            border-top: 1px solid #cae0af;
+            padding-top: 24px;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #2f6b1f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← 返回主页</a>
+    <h1>📄 Arduino 完整代码 · 自动浇水系统</h1>
+    <div class="code-container">
+        <pre style="margin:0; padding:0; background:transparent; color:inherit; font-family:inherit;">#define btn1Pin 25
+#define btn2Pin 33
+#include &lt;U8g2lib.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;WiFi.h&gt;
+#include &lt;PubSubClient.h&gt;
+
+#include &lt;OneButton.h&gt;
+#include &lt;DHT.h&gt;
+
+volatile int waterRelayPin;
+volatile int tempHumiPin;
+volatile int soilPin;
+volatile int tempValue;
+volatile int humiValue;
+volatile int soilValue;
+volatile uint8_t isOpen;
+volatile uint8_t isAuto;
+volatile unsigned long lastDispDT;
+volatile unsigned long lastWaterDT;
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
+const char *mqtt_broker = "192.168.4.100";
+const char *mqtt_username = "lingyiwls@qq.com";
+const char *mqtt_password = "4b8bcd3e3dad444628109635f9a39b7b";
+const int mqtt_port = 1883;
+String mqtt_topic = "";
+String mqtt_data = "";
+boolean mqtt_status = false;
+String project = "water";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+void callback(char *topic, byte *payload, unsigned int length) {
+  String data = "";
+  for (int i = 0; i &lt; length; i++) {
+    data = String(data) + String((char) payload[i]);
+  }
+  mqtt_topic = String(topic);
+  mqtt_data = data;
+  mqtt_status = true;
+}
+
+OneButton buttonbtn1Pin(btn1Pin,true);
+OneButton buttonbtn2Pin(btn2Pin,true);
+DHT dht32(32, 11);
+
+void attachClickbtn1Pin() {
+  chgAuto();
+}
+
+void setShowCharset() {
+  u8g2.setFont(u8g2_font_wqy12_t_gb2312a);
+  u8g2.setFontPosTop();
+}
+
+void showDefaultInfo() {
+  u8g2.firstPage();
+  do
+  {
+    setShowCharset();
+    u8g2.setCursor(20,1);
+    u8g2.print("自动浇水系统");
+    u8g2.drawHLine(0,15,128);
+    String data = "";
+    if (isOpen) {
+      data = String(data) + String(" 打开");
+
+    } else {
+      data = String(data) + String(" 关闭");
+
+    }
+    data = String(data) + String(String(" 土壤") + String(soilValue));
+    u8g2.setCursor(0,18);
+    u8g2.print(data);
+    data = "";
+    data = String(data) + String(String(" 温湿度") + String(tempValue));
+    data = String(data) + String(String("/") + String(humiValue));
+    u8g2.setCursor(0,32);
+    u8g2.print(data);
+    u8g2.drawHLine(0,46,128);
+    if (isAuto) {
+      data = String(" ") + String("自动模式");
+
+    } else {
+      data = String(" ") + String("手动模式");
+
+    }
+    u8g2.setCursor(0,50);
+    u8g2.print(data);
+  }while(u8g2.nextPage());
+}
+
+void attachClickbtn2Pin() {
+  manualChg();
+}
+
+void manualChg() {
+  //手动改变
+  if (!isAuto) {
+    isOpen = !isOpen;
+    openPump(isOpen);
+
+  }
+}
+
+void getSensorVal() {
+  //获取各类传感器的数据
+  tempValue = dht32.readTemperature();
+  humiValue = dht32.readHumidity();
+  soilValue = 4095 - analogRead(soilPin);
+}
+
+void myLoop() {
+  if (millis() - lastDispDT &gt; 2000) {
+    getSensorVal();
+    showDefaultInfo();
+    lastDispDT = millis();
+
+  }
+  autoPump();
+  reconnect_mqtt("key1", "key2");
+}
+
+void openPump(int val) {
+  //设置水泵动作
+  pinMode(waterRelayPin, OUTPUT);
+  digitalWrite(waterRelayPin,val);
+  showDefaultInfo();
+  String data = "";
+  data = String(data) + String(String(" 温湿度") + String(tempValue));
+  data = String(data) + String(String("/") + String(humiValue));
+  data = String(data) + String(String(" 土壤") + String(soilValue));
+  data = String(data) + String("&lt;br/&gt;");
+  if (val) {
+    lastWaterDT = millis();
+    client.publish(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("txtInfo")).c_str(),String(String(data) + String("打开水泵")).c_str());
+
+  } else {
+    client.publish(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("txtInfo")).c_str(),String(String(data) + String("关闭水泵")).c_str());
+
+  }
+}
+
+void autoPump() {
+  if (isAuto) {
+    int tmpOpen = 0;
+    if (soilValue &lt; 2000) {
+      tmpOpen = 1;
+
+    }
+    if (!isOpen && tmpOpen) {
+      isOpen = tmpOpen;
+      openPump(isOpen);
+
+    }
+    if (isOpen && millis() - lastWaterDT &gt; 3000) {
+      isOpen = tmpOpen;
+      openPump(isOpen);
+      lastWaterDT = millis();
+
+    }
+
+  }
+}
+
+void chgAuto() {
+  isAuto = !isAuto;
+  client.publish(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("auto")).c_str(),String(isAuto).c_str());
+  isOpen = 0;
+  openPump(isOpen);
+}
+
+void reconnect_mqtt(String key1, String key2) {
+  static unsigned long previousMillis = 0;
+  if (!client.connected() &amp;&amp; (millis() - previousMillis &gt;=3000)) {
+    String client_id = "esp-client-";
+    client_id += String(WiFi.macAddress());
+    Serial.printf("The client %s connects to the public mqtt broker\n", client_id.c_str());
+    if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+      Serial.println("Public emqx mqtt broker connected");
+      client.publish(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("b640a0ce465fa2a4150c36b305c1c11b")).c_str(),String(client_id).c_str());
+      client.subscribe(String(String(mqtt_username) +"/"+ String(project) +"/"+ String(key1)).c_str());
+      client.subscribe(String(String(mqtt_username) +"/"+ String(project) +"/"+ String(key2)).c_str());
+    } else {
+      Serial.print("failed with state ");
+      Serial.print(client.state());
+      delay(2000);
+    }
+    previousMillis = millis();
+  }
+}
+
+void setup(){
+  waterRelayPin = 27;
+  tempHumiPin = 32;
+  soilPin = 35;
+  tempValue = 0;
+  humiValue = 0;
+  soilValue = 0;
+  isOpen = 0;
+  isAuto = 0;
+  lastDispDT = 0;
+  lastWaterDT = 0;
+  u8g2.setI2CAddress(0x3C*2);
+  u8g2.begin();
+  WiFi.begin("myweb", "my87654321");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Local IP:");
+  Serial.print(WiFi.localIP());
+
+  u8g2.enableUTF8Print();
+  pinMode(btn1Pin, INPUT_PULLUP);
+  pinMode(btn2Pin, INPUT_PULLUP);
+  pinMode(tempHumiPin, INPUT);
+  pinMode(soilPin, INPUT);
+  pinMode(waterRelayPin, OUTPUT);
+  client.setServer(mqtt_broker, mqtt_port);
+  client.setCallback(callback);
+  while (!client.connected()) {
+    String client_id = "esp-client-";
+    client_id += String(WiFi.macAddress());
+    Serial.printf("The client %s connects to the public mqtt broker\n", client_id.c_str());
+    if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+      Serial.println("Public emqx mqtt broker connected");
+      client.publish(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("b640a0ce465fa2a4150c36b305c1c11b")).c_str(),String(client_id).c_str());
+    } else {
+      Serial.print("failed with state ");
+      Serial.print(client.state());
+      delay(2000);
+    }
+  }
+
+  buttonbtn1Pin.attachClick(attachClickbtn1Pin);
+  u8g2.enableUTF8Print();
+
+  buttonbtn2Pin.attachClick(attachClickbtn2Pin);
+  Serial.begin(9600);
+  client.subscribe(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("key1")).c_str());
+  client.subscribe(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("key2")).c_str());
+  dht32.begin();
+}
+
+void loop(){
+  client.loop();
+
+  buttonbtn1Pin.tick();
+  buttonbtn2Pin.tick();
+  if (mqtt_status) {
+    if (String(mqtt_topic).equals(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("key1")))) {
+      Serial.println(String("网络按键1 ") + String(mqtt_data));
+      if (mqtt_data == "1") {
+        chgAuto();
+      }
+      mqtt_status = false;
+    }
+  }
+
+  if (mqtt_status) {
+    if (String(mqtt_topic).equals(String(String(mqtt_username) +"/"+ String(project) +"/"+ String("key2")))) {
+      Serial.println(String("网络按键2 ") + String(mqtt_data));
+      if (mqtt_data == "1") {
+        manualChg();
+      }
+      mqtt_status = false;
+    }
+  }
+
+  myLoop();
+}</pre>
+    </div>
+    <div class="footer-note">
+        🌟 天之饺子 · 自动浇水系统 ｜ Arduino 核心代码
+    </div>
+</body>
+</html>
