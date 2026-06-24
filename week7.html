@@ -102,6 +102,50 @@
             margin-top: 8px;
         }
 
+        /* 专门为团队分工定制的表格/卡片布局 */
+        .division-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .division-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .division-item:last-child {
+            border-bottom: none;
+        }
+
+        .division-label {
+            font-weight: bold;
+            color: #4a5568;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .division-owner {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-right: 20px;
+            color: #333;
+            text-align: center;
+            width: 90px;
+            flex-shrink: 0;
+        }
+
+        .division-detail {
+            color: #666;
+            font-size: 0.95em;
+        }
+
         .connection-box {
             background: #f8f9fa;
             padding: 25px;
@@ -303,6 +347,12 @@
                 min-width: 140px;
             }
 
+            .division-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
             .step-box {
                 flex-direction: column;
                 align-items: flex-start;
@@ -332,7 +382,7 @@
             </div>
 
             <div class="section">
-                <h2>二、团队成员</h2>
+                <h2>二、团队成员与分工</h2>
                 <div class="team-box">
                     <div class="team-member">
                         <div class="name">钟如愿</div>
@@ -341,6 +391,34 @@
                     <div class="team-member">
                         <div class="name">王芯雅澜</div>
                         <div class="role">3D建模 & 外壳设计</div>
+                    </div>
+                </div>
+
+                <div class="division-box">
+                    <div class="division-item">
+                        <div class="division-label">🛠️ 硬件电路设计</div>
+                        <div class="division-owner">钟如愿</div>
+                        <div class="division-detail">负责ESP32与OLED屏幕的引脚定义，完成面包板电路搭建与理线测试。</div>
+                    </div>
+                    <div class="division-item">
+                        <div class="division-label">💻 嵌入式代码</div>
+                        <div class="division-owner">钟如愿</div>
+                        <div class="division-detail">编写WiFi连接模块，对接心知天气API获取数据并用JSON进行数据解析与显示。</div>
+                    </div>
+                    <div class="division-item">
+                        <div class="division-label">📐 3D 外壳建模</div>
+                        <div class="division-owner">王芯雅澜</div>
+                        <div class="division-detail">使用三维建模软件设计小电视复古外壳，精确预留Type-C接口及屏幕固定柱尺寸。</div>
+                    </div>
+                    <div class="division-item">
+                        <div class="division-label">🖨️ 3D 打印与装配</div>
+                        <div class="division-owner">王芯雅澜</div>
+                        <div class="division-detail">负责切片并操作3D打印机进行外壳输出，利用热熔胶完成各部件的最终拼装。</div>
+                    </div>
+                    <div class="division-item">
+                        <div class="division-label">📝 文档与视频</div>
+                        <div class="division-owner">共同完成</div>
+                        <div class="division-detail">钟如愿负责录制功能演示视频，王芯雅澜负责整理项目总结及美化展示页面。</div>
                     </div>
                 </div>
             </div>
